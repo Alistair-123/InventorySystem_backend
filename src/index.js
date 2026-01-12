@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-
+import cookieParser from 'cookie-parser';
 import PersonnelRoute from './routes/PersonnelRoute/PersonnelRoute.js';
 import AuthRoute from './routes/AuthRoute/AuthRoute.js';
 import CategoryRoute from './routes/CatergoryRoute/CategoryRoute.js';
@@ -13,10 +13,10 @@ connectDb();
 // eslint-disable-next-line no-undef
 const PORT = process.env.PORT;
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: true,
   credentials: true,
 }));
-app.use(express.json());
+app.use(express.json(), cookieParser());
 
 app.get('/', (req, res) => {
   res.send('Inventory System API is running');

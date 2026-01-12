@@ -13,4 +13,5 @@ route.post('/createcategory', authenticateToken, createCategory);
 route.get('/getcategories', authenticateToken, getCategories);
 route.put('/updatecategory/:id', authenticateToken, updateCategory);
 route.delete('/deletecategory/:id', authenticateToken, deleteCategory);
+
 export default route;

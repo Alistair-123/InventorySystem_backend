@@ -1,0 +1,12 @@
+ {
+  "personnelId": "PERS-0001",
+  "firstName": "Juan",
+  "middleName": "Santos",
+  "lastName": "Dela Cruz",
+  "personnelType": "plantilla",
+  "designation": "IT-001",
+  "designationName": "Information Technology Officer",
+  "status": "active",
+  "password": "StrongPassword123!",
+  "role": "user"
+}
