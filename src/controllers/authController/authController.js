@@ -102,7 +102,7 @@ export const login = async (req, res) => {
     });
 
   } catch (error) {
-    // Catch-all for unexpected errors (DB downtime, bcrypt issues, etc.)
+  
     logError("Unexpected error during login", error);
 
     return res.status(500).json({
