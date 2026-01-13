@@ -9,7 +9,6 @@ export const personnelSeed = [
     middleName: "",
     lastName: "Administrator",
     personnelType: "plantilla",
-    designation: "IT Head",
     designationName: "Information Technology Head",
     status: "active",
     password: await bcrypt.hash("Admin@123", salt),
