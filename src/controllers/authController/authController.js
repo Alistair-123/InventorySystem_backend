@@ -103,10 +103,9 @@ return res.status(200).json({
     firstName: personnel.firstName,
     lastName: personnel.lastName,
     role: personnel.role,
+    designation: personnel.designationName
   },
 });
-
-
   } catch (error) {
   
     logError("Unexpected error during login", error);
