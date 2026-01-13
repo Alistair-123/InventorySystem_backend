@@ -22,10 +22,6 @@ const personnelSchema = new mongoose.Schema({
         required: true, 
         enum: ['plantilla', 'jobOrder']
     },
-    designation: { 
-        type: String, 
-        required: true 
-    },
     designationName: { 
         type: String, 
         required: true 

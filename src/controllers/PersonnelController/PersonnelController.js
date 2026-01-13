@@ -4,7 +4,7 @@ const saltRounds = 10;
 
 export const createPersonnel = async (req, res) => {
     try{
-        const {personnelId, firstName, middleName, lastName, personnelType, designation, designationName, status, password, role } = req.body;
+        const {personnelId, firstName, middleName, lastName, personnelType, designationName, status, password, role } = req.body;
 
         // Check if personnelId already exists
         const existingPersonnel = await Personnel.findOne({ personnelId });
@@ -19,7 +19,6 @@ export const createPersonnel = async (req, res) => {
             middleName,
             lastName,
             personnelType,
-            designation,
             designationName,
             status,
             password: hashedPassword,
