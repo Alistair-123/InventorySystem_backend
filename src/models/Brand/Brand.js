@@ -1,16 +1,16 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const CategorySchema = new mongoose.Schema({
-    categoryId: {
+const BrandSchema = new mongoose.Schema({
+    brandId: { 
         type: String,
         required: true,
         unique: true,
         trim: true,
     },
-    categoryName: {
+    brandName: {
         type: String,
         required: true,
-         trim: true,
+        trim: true,
     },
     status: {
         type: String,
@@ -18,6 +18,8 @@ const CategorySchema = new mongoose.Schema({
         enum: ['active', 'inactive']
     },
     createdAt: { type: Date, default: Date.now },
-}, { timestamps: true });
-const Category = mongoose.model('Category', CategorySchema);
-export default Category;
+}, { timestamps: true })
+
+const Brand = mongoose.model('Category', BrandSchema);
+
+export default Brand

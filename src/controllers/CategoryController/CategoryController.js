@@ -30,7 +30,7 @@ export const getCategories = async (req, res) => {
     // Build query dynamically
     const query = {};
 
-      if (search) {
+    if (search) {
       query.$or = [
         { categoryName: { $regex: search, $options: "i" } },
         { categoryId: { $regex: search, $options: "i" } },
