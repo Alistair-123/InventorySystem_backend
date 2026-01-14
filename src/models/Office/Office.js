@@ -1,13 +1,13 @@
 import mongoose from "mongoose";
 
-const BrandSchema = new mongoose.Schema({
-    brandId: { 
+const OfficeSchema = new mongoose.Schema({
+    officeId: { 
         type: String,
         required: true,
         unique: true,
         trim: true,
     },
-    brandName: {
+    officeName: {
         type: String,
         required: true,
         trim: true,
@@ -20,6 +20,6 @@ const BrandSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
 }, { timestamps: true })
 
-const Brand = mongoose.model('Brand', BrandSchema);
+const Office = mongoose.model('Office', OfficeSchema);
 
-export default Brand
+export default Office

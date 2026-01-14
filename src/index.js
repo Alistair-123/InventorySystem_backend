@@ -6,9 +6,12 @@ import PersonnelRoute from './routes/PersonnelRoute/PersonnelRoute.js';
 import AuthRoute from './routes/AuthRoute/AuthRoute.js';
 import CategoryRoute from './routes/CatergoryRoute/CategoryRoute.js';
 import BrandRoute from './routes/BrandRoute/BrandRoute.js'
+import UnitRoute from './routes/UnitRoute/UnitRoute.js'
+import OfficeRoute from './routes/OfficeRoute/OfficeRoute.js'
 const app = express();
 
 import {connectDb} from './db/db.js';
+
 connectDb();
 
 // eslint-disable-next-line no-undef
@@ -27,6 +30,8 @@ app.use('/api/personnel', PersonnelRoute);
 app.use('/api/auth', AuthRoute);
 app.use('/api/category', CategoryRoute);
 app.use('/api/brand', BrandRoute)
+app.use('/api/unit', UnitRoute)
+app.use('/api/office', OfficeRoute)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

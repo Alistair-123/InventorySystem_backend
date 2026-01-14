@@ -1,11 +1,13 @@
-import Brand from "../../models/Brand/Brand";
+import Brand from "../../models/Brand/Brand.js";
 
 export const createBrand = async (req, res) => {
     try {
         const { brandId, brandName, status } = req.body;
         // Check if categoryId already exists
-        const existingCategory = await Brand.findOne({ brandId });
-        if (existingCategory) return res.status(400).json({ message: "Category ID already exists" });
+        const existingBrand = await Brand.findOne({ brandId });
+        if (existingBrand)
+        return res.status(400).json({ message: "Brand ID already exists" });
+
 
         const newBrand= new Brand({
             brandId,
@@ -14,7 +16,10 @@ export const createBrand = async (req, res) => {
         });
 
         await newBrand.save();
-        res.status(201).json({ message: "Category created successfully", category: newBrand });
+       res.status(201).json({
+        message: "Brand created successfully",
+        brand: newBrand
+        });
     } catch (error) {
         res.status(500).json({ message: "Server Error", error: error.message });
     }
@@ -23,17 +28,17 @@ export const createBrand = async (req, res) => {
 export const getBrands = async (req, res) => {
     try{
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.page) || 20;
+        const limit = parseInt(req.query.limit) || 20;
         const skip = (page - 1) * limit
         const search = req.query.search || "";
 
         const query = {}
 
         if(search){
-            query.$or[
+            query.$or = [
                 { brandId: { $regex: search, $options: "i"}},
                 { brandName: { $regex: search, $options: "i"}}
-            ]
+            ];
         }
 
         const [brand, totalBrands] = await Promise.all([
@@ -80,7 +85,7 @@ export const updateBrand = async (req, res) => {
 export const deleteBrand = async(req, res) => {
     try{
         const { id } = req.params
-        const deletedBrand = await Brand.findByidAndDelet(id)
+        const deletedBrand = await Brand.findByIdAndDelete(id);
         if (!deletedBrand) return res.status(404).json({ message: "Brand not found" });
         res.status(200).json({ message: "Brand deleted successfully" });
     }catch(error){

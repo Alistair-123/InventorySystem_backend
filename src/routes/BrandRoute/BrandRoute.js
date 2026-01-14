@@ -1,5 +1,5 @@
 import express from 'express'
-import { createBrand, getBrands, deleteBrand, updateBrand } from '../../controllers/BrandController/BrandController'
+import { createBrand, getBrands, deleteBrand, updateBrand } from '../../controllers/BrandController/BrandController.js'
 
 import { authenticateToken } from '../../middleware/authenticateMiddleware.js';
 
