@@ -1,11 +1,11 @@
 import express from 'express'
 import { createOffice, getOffices, updateOffice, deleteOffice } from '../../controllers/OfficeController/OfficeController.js'
-import { authenticatedToken } from '../../middleware/authenticateMiddleware.js';
+import { authenticateToken } from '../../middleware/authenticateMiddleware.js';
 const router = express.Router()
 
-router.post('/createoffice', authenticatedToken, createOffice)
-router.get('/getoffices', authenticatedToken, getOffices)
-router.put('/updateoffice', authenticatedToken, updateOffice)
-router.delete('/deleteoffice', authenticatedToken, deleteOffice)
+router.post('/createoffice', authenticateToken, createOffice)
+router.get('/getoffices', authenticateToken, getOffices)
+router.put('/updateoffice', authenticateToken, updateOffice)
+router.delete('/deleteoffice', authenticateToken, deleteOffice)
 
 export default router

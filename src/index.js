@@ -34,6 +34,7 @@ app.use('/api/brand', BrandRoute)
 app.use('/api/unit', UnitRoute)
 app.use('/api/office', OfficeRoute)
 app.use('/api/acquisitiontype', AcquisitionRoute)
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
