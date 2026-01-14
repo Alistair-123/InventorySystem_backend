@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import PersonnelRoute from './routes/PersonnelRoute/PersonnelRoute.js';
 import AuthRoute from './routes/AuthRoute/AuthRoute.js';
 import CategoryRoute from './routes/CatergoryRoute/CategoryRoute.js';
+import BrandRoute from './routes/BrandRoute/BrandRoute.js'
 const app = express();
 
 import {connectDb} from './db/db.js';
@@ -25,6 +26,7 @@ app.get('/', (req, res) => {
 app.use('/api/personnel', PersonnelRoute);
 app.use('/api/auth', AuthRoute);
 app.use('/api/category', CategoryRoute);
+app.use('/api/brand', BrandRoute)
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
