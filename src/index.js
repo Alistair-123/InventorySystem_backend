@@ -8,6 +8,7 @@ import CategoryRoute from './routes/CatergoryRoute/CategoryRoute.js';
 import BrandRoute from './routes/BrandRoute/BrandRoute.js'
 import UnitRoute from './routes/UnitRoute/UnitRoute.js'
 import OfficeRoute from './routes/OfficeRoute/OfficeRoute.js'
+import AcquisitionRoute from './routes/AcquisitionType/AcquisitionType.js'
 const app = express();
 
 import {connectDb} from './db/db.js';
@@ -32,7 +33,7 @@ app.use('/api/category', CategoryRoute);
 app.use('/api/brand', BrandRoute)
 app.use('/api/unit', UnitRoute)
 app.use('/api/office', OfficeRoute)
-
+app.use('/api/acquisitiontype', AcquisitionRoute)
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
