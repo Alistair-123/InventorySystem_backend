@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post('/createunit', authenticateToken, createUnit)
 router.get('/getunit', authenticateToken, getUnits)
-router.put('/updateunit', authenticateToken, updateUnit)
-router.delete('/deleteunit', authenticateToken, deleteUnit)
+router.put('/updateunit/:id', authenticateToken, updateUnit)
+router.delete('/deleteunit/:id', authenticateToken, deleteUnit)
 
 export default router

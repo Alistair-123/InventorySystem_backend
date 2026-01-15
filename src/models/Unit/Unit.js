@@ -7,7 +7,7 @@ const UnitSchema = new mongoose.Schema({
         unique: true,
         trim: true,
     },
-    UnitName: {
+    unitName: {
         type: String,
         required: true,
         trim: true,

@@ -5,7 +5,7 @@ import Unit from "../../models/Unit/Unit.js";
  */
 export const createUnit = async (req, res) => {
   try {
-    const { unitId, UnitName, status } = req.body;
+    const { unitId, unitName, status } = req.body;
 
     // Check if unitId already exists
     const existingUnit = await Unit.findOne({ unitId });
@@ -15,7 +15,7 @@ export const createUnit = async (req, res) => {
 
     const newUnit = new Unit({
       unitId,
-      UnitName,
+      unitName,
       status,
     });
 
@@ -83,11 +83,11 @@ export const getUnits = async (req, res) => {
 export const updateUnit = async (req, res) => {
   try {
     const { id } = req.params;
-    const { unitId, UnitName, status } = req.body;
+    const { unitId, unitName, status } = req.body;
 
     const updatedUnit = await Unit.findByIdAndUpdate(
       id,
-      { unitId, UnitName, status },
+      { unitId, unitName, status },
       { new: true, runValidators: true }
     );
 
