@@ -3,7 +3,7 @@ import { createBrand, getBrands, deleteBrand, updateBrand } from '../../controll
 
 import { authenticateToken } from '../../middleware/authenticateMiddleware.js';
 
-const route = express.Router();
+const   route = express.Router();
 
 route.post('/createbrand', authenticateToken, createBrand)
 route.get('/getbrand', authenticateToken, getBrands)

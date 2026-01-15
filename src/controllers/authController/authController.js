@@ -116,22 +116,35 @@ return res.status(200).json({
   }
 };
 
+export const cookieOptions = {
+  httpOnly: true,
+  secure: false,
+  sameSite: 'lax',
+  path: '/',
+};
+
+
 export const logout = async (req, res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
+
     if (refreshToken) {
       await Personnel.findOneAndUpdate(
         { refreshToken },
-        { $unset: { refreshToken: "" } }
+        { $unset: { refreshToken: 1 } }
       );
     }
 
     res.clearCookie('accessToken', cookieOptions);
     res.clearCookie('refreshToken', cookieOptions);
 
-    res.status(200).json({ message: "Logged out successfully." });
+    return res.status(200).json({
+      message: 'Logged out successfully',
+    });
   } catch (error) {
-    res.status(500).json({ message: "Internal server error", error });
+    return res.status(500).json({
+      message: 'Internal server error', error
+    });
   }
 };
 
