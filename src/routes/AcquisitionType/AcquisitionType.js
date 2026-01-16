@@ -14,12 +14,12 @@ const router = express.Router();
 router.post("/createacquisitiontype", authenticateToken, createAcquisitionType);
 
 
-router.get("/getcquisitiontype", authenticateToken, getAcquisitionTypes);
+router.get("/getacquisitiontype", authenticateToken, getAcquisitionTypes);
 
 
-router.put("/updatecquisitiontype/:id", authenticateToken, updateAcquisitionType);
+router.put("/updateacquisitiontype/:id", authenticateToken, updateAcquisitionType);
 
 
-router.delete("/deletecquisitiontype/:id", authenticateToken, deleteAcquisitionType);
+router.delete("/deleteacquisitiontype/:id", authenticateToken, deleteAcquisitionType);
 
 export default router;
