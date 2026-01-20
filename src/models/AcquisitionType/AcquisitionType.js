@@ -31,8 +31,8 @@ const AcquisitionTypeSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 /* -------- Auto-generate ID -------- */
-AcquisitionTypeSchema.pre("save", async function (next) {
-  if (this.acquisitionTypeId) return next();
+AcquisitionTypeSchema.pre("save", async function () {
+  if (this.acquisitionTypeId) return;
 
   const counter = await Counter.findOneAndUpdate(
     { name: "acquisitionType" },
@@ -40,12 +40,13 @@ AcquisitionTypeSchema.pre("save", async function (next) {
     { new: true, upsert: true }
   );
 
-  this.acquisitionTypeId = `ACQ-${counter.seq
-    .toString()
-    .padStart(3, "0")}`;
+  if (!counter) {
+    throw new Error("Failed to generate acquisition type ID");
+  }
 
-  next();
+  this.acquisitionTypeId = `ACQ-${String(counter.seq).padStart(3, "0")}`;
 });
+
 
 const AcquisitionType = mongoose.model(
   "AcquisitionType",

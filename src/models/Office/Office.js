@@ -31,8 +31,8 @@ const OfficeSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 /* ---------- Auto-generate Office ID ---------- */
-OfficeSchema.pre("save", async function (next) {
-  if (this.officeId) return next();
+OfficeSchema.pre("save", async function () {
+  if (this.officeId) return;
 
   const counter = await Counter.findOneAndUpdate(
     { name: "office" },
@@ -40,12 +40,13 @@ OfficeSchema.pre("save", async function (next) {
     { new: true, upsert: true }
   );
 
-  this.officeId = `OFF-${counter.seq
-    .toString()
-    .padStart(3, "0")}`;
+  if (!counter) {
+    throw new Error("Failed to generate office ID");
+  }
 
-  next();
+  this.officeId = `OFF-${String(counter.seq).padStart(3, "0")}`;
 });
+
 
 const Office = mongoose.model("Office", OfficeSchema);
 export default Office;

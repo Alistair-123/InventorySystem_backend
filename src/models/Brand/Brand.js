@@ -31,8 +31,8 @@ const BrandSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 /* ---------- Auto-generate Brand ID ---------- */
-BrandSchema.pre("save", async function (next) {
-  if (this.brandId) return next();
+BrandSchema.pre("save", async function () {
+  if (this.brandId) return;
 
   const counter = await Counter.findOneAndUpdate(
     { name: "brand" },
@@ -40,12 +40,13 @@ BrandSchema.pre("save", async function (next) {
     { new: true, upsert: true }
   );
 
-  this.brandId = `BRD-${counter.seq
-    .toString()
-    .padStart(3, "0")}`;
+  if (!counter) {
+    throw new Error("Failed to generate brand ID");
+  }
 
-  next();
+  this.brandId = `BRD-${String(counter.seq).padStart(3, "0")}`;
 });
+
 
 const Brand = mongoose.model("Brand", BrandSchema);
 export default Brand;

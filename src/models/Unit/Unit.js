@@ -31,8 +31,8 @@ const UnitSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 /* ---------- Auto-generate Unit ID ---------- */
-UnitSchema.pre("save", async function (next) {
-  if (this.unitId) return next();
+UnitSchema.pre("save", async function () {
+  if (this.unitId) return;
 
   const counter = await Counter.findOneAndUpdate(
     { name: "unit" },
@@ -40,11 +40,11 @@ UnitSchema.pre("save", async function (next) {
     { new: true, upsert: true }
   );
 
-  this.unitId = `UNT-${counter.seq
-    .toString()
-    .padStart(3, "0")}`;
+  if (!counter) {
+    throw new Error("Failed to generate unit ID");
+  }
 
-  next();
+  this.unitId = `UNT-${String(counter.seq).padStart(3, "0")}`;
 });
 
 const Unit = mongoose.model("Unit", UnitSchema);

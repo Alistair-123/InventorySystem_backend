@@ -31,8 +31,8 @@ const CategorySchema = new mongoose.Schema({
 }, { timestamps: true });
 
 /* ---------- Auto-generate Category ID ---------- */
-CategorySchema.pre("save", async function (next) {
-  if (this.categoryId) return next();
+CategorySchema.pre("save", async function () {
+  if (this.categoryId) return;
 
   const counter = await Counter.findOneAndUpdate(
     { name: "category" },
@@ -40,12 +40,15 @@ CategorySchema.pre("save", async function (next) {
     { new: true, upsert: true }
   );
 
-  this.categoryId = `CAT-${counter.seq
-    .toString()
-    .padStart(3, "0")}`;
+  if (!counter) {
+    throw new Error("Failed to generate category ID");
+  }
 
-  next();
+  this.categoryId = `CAT-${String(counter.seq).padStart(3, "0")}`;
 });
+
+
+
 
 const Category = mongoose.model("Category", CategorySchema);
 export default Category;
