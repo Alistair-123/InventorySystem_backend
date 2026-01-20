@@ -5,33 +5,27 @@ import Unit from "../../models/Unit/Unit.js";
  */
 export const createUnit = async (req, res) => {
   try {
-    const { unitId, unitName, status } = req.body;
-
-    // Check if unitId already exists
-    const existingUnit = await Unit.findOne({ unitId });
-    if (existingUnit) {
-      return res.status(400).json({ message: "Unit ID already exists" });
-    }
+    const { unitName, status } = req.body;
 
     const newUnit = new Unit({
-      unitId,
       unitName,
-      status,
+      status
     });
 
     await newUnit.save();
 
     res.status(201).json({
       message: "Unit created successfully",
-      unit: newUnit,
+      unit: newUnit
     });
   } catch (error) {
     res.status(500).json({
       message: "Server Error",
-      error: error.message,
+      error: error.message
     });
   }
 };
+
 
 /**
  * GET UNITS (with pagination + search)
@@ -83,11 +77,11 @@ export const getUnits = async (req, res) => {
 export const updateUnit = async (req, res) => {
   try {
     const { id } = req.params;
-    const { unitId, unitName, status } = req.body;
+    const { unitName, status } = req.body;
 
     const updatedUnit = await Unit.findByIdAndUpdate(
       id,
-      { unitId, unitName, status },
+      { unitName, status },
       { new: true, runValidators: true }
     );
 
@@ -97,15 +91,16 @@ export const updateUnit = async (req, res) => {
 
     res.status(200).json({
       message: "Unit updated successfully",
-      unit: updatedUnit,
+      unit: updatedUnit
     });
   } catch (error) {
     res.status(500).json({
       message: "Server Error",
-      error: error.message,
+      error: error.message
     });
   }
 };
+
 
 /**
  * DELETE UNIT

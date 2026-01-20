@@ -1,29 +1,28 @@
 import Brand from "../../models/Brand/Brand.js";
 
 export const createBrand = async (req, res) => {
-    try {
-        const { brandId, brandName, status } = req.body;
-        // Check if categoryId already exists
-        const existingBrand = await Brand.findOne({ brandId });
-        if (existingBrand)
-        return res.status(400).json({ message: "Brand ID already exists" });
+  try {
+    const { brandName, status } = req.body;
 
+    const newBrand = new Brand({
+      brandName,
+      status
+    });
 
-        const newBrand= new Brand({
-            brandId,
-            brandName,
-            status
-        });
+    await newBrand.save();
 
-        await newBrand.save();
-       res.status(201).json({
-        message: "Brand created successfully",
-        brand: newBrand
-        });
-    } catch (error) {
-        res.status(500).json({ message: "Server Error", error: error.message });
-    }
-}
+    res.status(201).json({
+      message: "Brand created successfully",
+      brand: newBrand
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Error",
+      error: error.message
+    });
+  }
+};
+
 
 export const getBrands = async (req, res) => {
     try{
@@ -67,20 +66,32 @@ export const getBrands = async (req, res) => {
 }
 
 export const updateBrand = async (req, res) => {
-    try{
-        const { id } = req.params
-        const { brandId, brandName, status } = req.body;
-        const updatedBrand = await Brand.findByIdAndUpdate(
-            id,
-            { brandId, brandName, status },
-            { new: true }
-        );
-        if (!updatedBrand) return res.status(404).json({ message: "Brand not found" });
-        res.status(200).json({ message: "Brand updated successfully", brand: updatedBrand });
-    }catch(error){
-        res.status(500).json({ message: "Server Error", error: error.message });
+  try {
+    const { id } = req.params;
+    const { brandName, status } = req.body;
+
+    const updatedBrand = await Brand.findByIdAndUpdate(
+      id,
+      { brandName, status },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedBrand) {
+      return res.status(404).json({ message: "Brand not found" });
     }
-}
+
+    res.status(200).json({
+      message: "Brand updated successfully",
+      brand: updatedBrand
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Server Error",
+      error: error.message
+    });
+  }
+};
+
 
 export const deleteBrand = async(req, res) => {
     try{

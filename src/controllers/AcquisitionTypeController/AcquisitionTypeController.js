@@ -5,35 +5,27 @@ import AcquisitionType from "../../models/AcquisitionType/AcquisitionType.js";
  */
 export const createAcquisitionType = async (req, res) => {
   try {
-    const { acquisitionTypeId, acquisitionTypeName, status } = req.body;
-
-    // Check if acquisitionTypeId already exists
-    const existingType = await AcquisitionType.findOne({ acquisitionTypeId });
-    if (existingType) {
-      return res.status(400).json({
-        message: "Acquisition Type ID already exists",
-      });
-    }
+    const { acquisitionTypeName, status } = req.body;
 
     const newAcquisitionType = new AcquisitionType({
-      acquisitionTypeId,
       acquisitionTypeName,
-      status,
+      status
     });
 
     await newAcquisitionType.save();
 
     res.status(201).json({
       message: "Acquisition Type created successfully",
-      acquisitionType: newAcquisitionType,
+      acquisitionType: newAcquisitionType
     });
   } catch (error) {
     res.status(500).json({
       message: "Server Error",
-      error: error.message,
+      error: error.message
     });
   }
 };
+
 
 /**
  * GET ACQUISITION TYPES (pagination + search)
@@ -85,31 +77,30 @@ export const getAcquisitionTypes = async (req, res) => {
 export const updateAcquisitionType = async (req, res) => {
   try {
     const { id } = req.params;
-    const { acquisitionTypeId, acquisitionTypeName, status } = req.body;
+    const { acquisitionTypeName, status } = req.body;
 
     const updatedType = await AcquisitionType.findByIdAndUpdate(
       id,
-      { acquisitionTypeId, acquisitionTypeName, status },
+      { acquisitionTypeName, status },
       { new: true, runValidators: true }
     );
 
     if (!updatedType) {
-      return res.status(404).json({
-        message: "Acquisition Type not found",
-      });
+      return res.status(404).json({ message: "Not found" });
     }
 
     res.status(200).json({
-      message: "Acquisition Type updated successfully",
-      acquisitionType: updatedType,
+      message: "Updated successfully",
+      acquisitionType: updatedType
     });
   } catch (error) {
     res.status(500).json({
       message: "Server Error",
-      error: error.message,
+      error: error.message
     });
   }
 };
+
 
 /**
  * DELETE ACQUISITION TYPE
