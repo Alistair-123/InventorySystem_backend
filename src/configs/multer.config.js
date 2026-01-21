@@ -1,19 +1,33 @@
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 
-// Storage configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    // Expect: req.body.uploadType OR req.params.type
+    // examples: "itemsimage", "personnelsimage"
+
+    const uploadType = req.body.uploadType || req.params.type;
+
+    if (!uploadType) {
+      return cb(new Error("Upload type not specified"));
+    }
+
+    const uploadPath = path.join("src/uploads", uploadType);
+
+    // Ensure directory exists
+    fs.mkdirSync(uploadPath, { recursive: true });
+
+    cb(null, uploadPath);
   },
+
   filename: (req, file, cb) => {
     const uniqueName =
       Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, uniqueName + path.extname(file.originalname));
-  },
+  }
 });
 
-// Optional file filter
 const fileFilter = (req, file, cb) => {
   if (file.mimetype.startsWith("image/")) {
     cb(null, true);
@@ -25,4 +39,8 @@ const fileFilter = (req, file, cb) => {
 export const upload = multer({
   storage,
   fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB safety limit
+  }
 });
+  

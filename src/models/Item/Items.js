@@ -10,6 +10,12 @@ const Counter =
   mongoose.model("Counter", CounterSchema);
 
 const ItemsSchema = new mongoose.Schema({
+  itemImage: {
+  type: String, // relative path or filename
+  required: false,
+  trim: true
+},
+
   itemId: {
     type: String,
     unique: true,
@@ -47,8 +53,8 @@ const ItemsSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-ItemsSchema.pre("save", async function (next) {
-  if (this.itemId) return next();
+ItemsSchema.pre("save", async function () {
+  if (this.itemId) return ;
 
   const counter = await Counter.findOneAndUpdate(
     { name: "items" },
@@ -57,11 +63,11 @@ ItemsSchema.pre("save", async function (next) {
   );
 
   if (!counter) {
-    return next(new Error("Failed to generate item ID"));
+    return new Error("Failed to generate item ID");
   }
 
   this.itemId = `ITEM-${String(counter.seq).padStart(5, "0")}`;
-  next();
+  ;
 });
 
 const Items =
