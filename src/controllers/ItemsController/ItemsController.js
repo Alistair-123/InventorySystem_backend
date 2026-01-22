@@ -3,7 +3,8 @@ import Category from "../../models/Category/Categories.js";
 import Brand from "../../models/Brand/Brand.js";
 import Unit from "../../models/Unit/Unit.js";
 import Items from "../../models/Item/Items.js";
-import fs from "fs"
+import fs from "fs";
+import path from "path";
 
 export const getReferenceData = async (req, res) => {
   try {
@@ -98,11 +99,12 @@ export const getItems = async (req, res) => {
 export const updateItem = async (req, res) => {
   try {
     const item = await Items.findById(req.params.id);
+
     if (!item) {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    // ✅ delete old image if replaced
+    // ✅ Delete old image ONLY if a new one is uploaded
     if (req.file && item.itemImage) {
       const oldPath = path.join(
         process.cwd(),
@@ -110,13 +112,17 @@ export const updateItem = async (req, res) => {
         item.itemImage
       );
 
-      fs.unlink(oldPath, err => {
-        if (err) console.error("Failed to delete old image:", err);
-      });
+      if (fs.existsSync(oldPath)) {
+        fs.unlink(oldPath, err => {
+          if (err) console.error("Failed to delete old image:", err);
+        });
+      }
     }
 
+    // Update fields
     Object.assign(item, req.body);
 
+    // Set new image path if uploaded
     if (req.file) {
       item.itemImage = `${req.body.uploadType}/${req.file.filename}`;
     }
@@ -143,9 +149,11 @@ export const deleteItem = async (req, res) => {
         item.itemImage
       );
 
-      fs.unlink(imagePath, err => {
-        if (err) console.error("Failed to delete image:", err);
-      });
+      if (fs.existsSync(imagePath)) {
+        fs.unlink(imagePath, err => {
+          if (err) console.error("Failed to delete image:", err);
+        });
+      }
     }
 
     await item.deleteOne();
