@@ -4,5 +4,5 @@ node_modules/
 .cache/
 .local-chromium/
 
-backend/src/uploads/
+backend/src/uploads/personnels
 
