@@ -41,8 +41,9 @@ export const createItem = async (req, res) => {
 
       // ✅ store WEB-SAFE relative path only
       itemImage: req.file
-        ? `${req.body.uploadType}/${req.file.filename}`
+        ? `/uploads/items/${req.file.filename}`
         : null
+
     });
 
     res.status(201).json(item);
@@ -108,9 +109,10 @@ export const updateItem = async (req, res) => {
     if (req.file && item.itemImage) {
       const oldPath = path.join(
         process.cwd(),
-        "src/uploads",
+        "src",
         item.itemImage
       );
+
 
       if (fs.existsSync(oldPath)) {
         fs.unlink(oldPath, err => {
@@ -124,8 +126,9 @@ export const updateItem = async (req, res) => {
 
     // Set new image path if uploaded
     if (req.file) {
-      item.itemImage = `${req.body.uploadType}/${req.file.filename}`;
+      item.itemImage = `/uploads/items/${req.file.filename}`;
     }
+
 
     await item.save();
     res.json(item);

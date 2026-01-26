@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
@@ -23,10 +24,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
+
 app.use(
   "/uploads",
-  express.static(path.join(__dirname, "uploads"))
+  express.static(path.join(process.cwd(), "src/uploads"))
 );
+
 
 app.use(cors({
   origin: true,

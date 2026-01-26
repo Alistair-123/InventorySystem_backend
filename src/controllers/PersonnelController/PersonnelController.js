@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import Personnel from "../../models/Personnel/Personnel.js";
-
+import { deleteFileIfExists } from "../../utils/deleteFile.js";
 const saltRounds = 10;
 
 /**
@@ -20,10 +20,17 @@ export const createPersonnel = async (req, res) => {
       role,
     } = req.body;
 
+    if (!password || password.length < 8) {
+      return res.status(400).json({
+        message: "Password must be at least 8 characters",
+      });
+    }
 
     const existingPersonnel = await Personnel.findOne({ personnelId });
     if (existingPersonnel) {
-      return res.status(400).json({ message: "Personnel ID already exists" });
+      return res.status(409).json({
+        message: "Personnel ID already exists",
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -37,14 +44,20 @@ export const createPersonnel = async (req, res) => {
       designationName,
       status,
       password: hashedPassword,
-      role,
+      role: role || "user",
+      personnelImage: req.file
+        ? `/uploads/personnels/${req.file.filename}`
+        : null,
     });
 
     await newPersonnel.save();
 
     res.status(201).json({
       message: "Personnel created successfully",
-      personnel: newPersonnel,
+      personnel: {
+        ...newPersonnel.toObject(),
+        password: undefined,
+      },
     });
   } catch (error) {
     res.status(500).json({
@@ -103,7 +116,24 @@ export const getPersonnel = async (req, res) => {
 export const updatePersonnel = async (req, res) => {
   try {
     const { id } = req.params;
-    const updateData = { ...req.body };
+
+    const allowedFields = [
+      "firstName",
+      "middleName",
+      "lastName",
+      "personnelType",
+      "designationName",
+      "status",
+      "password",
+    ];
+
+    const updateData = {};
+
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updateData[field] = req.body[field];
+      }
+    });
 
     if (updateData.password) {
       updateData.password = await bcrypt.hash(
@@ -112,15 +142,22 @@ export const updatePersonnel = async (req, res) => {
       );
     }
 
+    const existingPersonnel = await Personnel.findById(id);
+    if (!existingPersonnel) {
+      return res.status(404).json({ message: "Personnel not found" });
+    }
+
+    // Handle image replacement
+    if (req.file) {
+      deleteFileIfExists(existingPersonnel.personnelImage);
+      updateData.personnelImage = `/uploads/personnels/${req.file.filename}`;
+    }
+
     const updatedPersonnel = await Personnel.findByIdAndUpdate(
       id,
       updateData,
       { new: true, runValidators: true }
     ).select("-password");
-
-    if (!updatedPersonnel) {
-      return res.status(404).json({ message: "Personnel not found" });
-    }
 
     res.status(200).json({
       message: "Personnel updated successfully",
@@ -134,16 +171,19 @@ export const updatePersonnel = async (req, res) => {
   }
 };
 
-
 export const deletePersonnel = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedPersonnel = await Personnel.findByIdAndDelete(id);
-
-    if (!deletedPersonnel) {
+    const personnel = await Personnel.findById(id);
+    if (!personnel) {
       return res.status(404).json({ message: "Personnel not found" });
     }
+
+    // Delete image file
+    deleteFileIfExists(personnel.personnelImage);
+
+    await personnel.deleteOne();
 
     res.status(200).json({
       message: "Personnel deleted successfully",

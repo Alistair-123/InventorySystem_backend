@@ -1,6 +1,11 @@
 import mongoose from "mongoose";
 
 const personnelSchema = new mongoose.Schema({
+      personnelImage: {
+        type: String, // relative path or filename
+        required: false,
+        trim: true
+        },
     personnelId: { 
         type: String, 
         required: true, 
