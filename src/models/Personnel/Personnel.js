@@ -9,7 +9,8 @@ const personnelSchema = new mongoose.Schema({
     personnelId: { 
         type: String, 
         required: true, 
-        unique: true 
+        unique: true,
+         uppercase: true,
     },
     firstName: { 
         type: String, 

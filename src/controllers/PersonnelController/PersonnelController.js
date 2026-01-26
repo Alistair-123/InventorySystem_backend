@@ -8,7 +8,7 @@ const saltRounds = 10;
  */
 export const createPersonnel = async (req, res) => {
   try {
-    const {
+    let {
       personnelId,
       firstName,
       middleName,
@@ -26,12 +26,8 @@ export const createPersonnel = async (req, res) => {
       });
     }
 
-    const existingPersonnel = await Personnel.findOne({ personnelId });
-    if (existingPersonnel) {
-      return res.status(409).json({
-        message: "Personnel ID already exists",
-      });
-    }
+    // Normalize once
+    personnelId = personnelId.trim().toUpperCase();
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
@@ -51,21 +47,27 @@ export const createPersonnel = async (req, res) => {
     });
 
     await newPersonnel.save();
+    console.log("CREATE HIT", req.body.personnelId, Date.now());
 
-    res.status(201).json({
-      message: "Personnel created successfully",
-      personnel: {
-        ...newPersonnel.toObject(),
-        password: undefined,
-      },
-    });
+
+    return res.status(201).json(newPersonnel);
   } catch (error) {
-    res.status(500).json({
+    // 🔐 Handle duplicate cleanly
+    if (error.code === 11000) {
+      return res.status(409).json({
+        message: "Personnel ID already exists",
+      });
+    }
+    console.error("❌ CATCH HIT:", error);
+
+    console.error("CREATE PERSONNEL ERROR:", error);
+    return res.status(500).json({
       message: "Server Error",
-      error: error.message,
     });
   }
 };
+
+
 
 
 export const getPersonnel = async (req, res) => {
