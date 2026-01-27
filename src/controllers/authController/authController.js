@@ -103,9 +103,14 @@ return res.status(200).json({
     firstName: personnel.firstName,
     lastName: personnel.lastName,
     role: personnel.role,
-    designation: personnel.designationName
+    designation: personnel.designationName,
+
+    // 👇 THIS is what the frontend needs
+    image: personnel.personnelImage || null
+
   },
 });
+
   } catch (error) {
   
     logError("Unexpected error during login", error);
@@ -150,20 +155,44 @@ export const logout = async (req, res) => {
 
 
 export const authCheck = async (req, res) => {
-    try {
-        const personnelId = req.personnel.id;
-        if(!personnelId)  return res.status(400).json({ message: "Invalid token." });
-           
-        const personnel = await Personnel.findById(personnelId).select('-password -refreshToken');
-        if (!personnel) {
-            return res.status(404).json({ message: "Personnel not found." });
-        }
-
-        res.status(200).json({ personnel });
-    } catch (error) {
-        res.status(500).json({ message: "Internal server error: " + error.message });
+  try {
+    const personnelId = req.personnel.id;
+    if (!personnelId) {
+      return res.status(400).json({ message: "Invalid token." });
     }
-}
+
+    const personnel = await Personnel.findById(personnelId)
+      .select("-password -refreshToken");
+
+    if (!personnel) {
+      return res.status(404).json({ message: "Personnel not found." });
+    }
+
+    // ✅ MAP DB FIELD → API FIELD
+    res.status(200).json({
+      personnel: {
+        id: personnel._id,
+        personnelId: personnel.personnelId,
+        firstName: personnel.firstName,
+        middleName: personnel.middleName,
+        lastName: personnel.lastName,
+        personnelType: personnel.personnelType,
+        designationName: personnel.designationName,
+        status: personnel.status,
+        role: personnel.role,
+
+        // 🔥 THIS LINE FIXES EVERYTHING
+        image: personnel.personnelImage || null
+
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Internal server error: " + error.message,
+    });
+  }
+};
+
 
 export const refreshTokens = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
