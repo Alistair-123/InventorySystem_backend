@@ -109,14 +109,80 @@ export const createProperty = async (req, res) => {
 ============================ */
 export const getProperties = async (req, res) => {
   try {
-    const properties = await Property.find()
-      .populate("item", "itemName itemId")
-      .populate("acquisitionType", "acquisitionTypeName")
-      .populate("personnel", "firstName lastName personnelId")
-      .populate("office", "officeName officeId")
-      .sort({ createdAt: -1 });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const search = req.query.search || "";
 
-    return res.status(200).json(properties);
+    const skip = (page - 1) * limit;
+
+    /* -------------------------------
+       SEARCH FILTER
+    -------------------------------- */
+    const searchFilter = search
+      ? {
+          $or: [
+            { propertyNo: { $regex: search, $options: "i" } }
+          ]
+        }
+      : {};
+
+    /* -------------------------------
+       QUERY
+    -------------------------------- */
+    const [properties, total] = await Promise.all([
+      Property.find(searchFilter)
+        .populate({
+          path: "item",
+          select: "itemName itemId",
+          match: search
+            ? { itemName: { $regex: search, $options: "i" } }
+            : {}
+        })
+        .populate({
+          path: "personnel",
+          select: "firstName lastName personnelId",
+          match: search
+            ? {
+                $or: [
+                  { firstName: { $regex: search, $options: "i" } },
+                  { lastName: { $regex: search, $options: "i" } }
+                ]
+              }
+            : {}
+        })
+        .populate({
+          path: "office",
+          select: "officeName officeId",
+          match: search
+            ? { officeName: { $regex: search, $options: "i" } }
+            : {}
+        })
+        .populate("acquisitionType", "acquisitionTypeName")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+
+      Property.countDocuments(searchFilter)
+    ]);
+
+    /* -------------------------------
+       REMOVE NULL POPULATES (SEARCH)
+    -------------------------------- */
+    const filtered = search
+      ? properties.filter(
+          (p) => p.item && p.personnel && p.office
+        )
+      : properties;
+
+    return res.status(200).json({
+      data: filtered,
+      pagination: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit)
+      }
+    });
   } catch (error) {
     console.error("Get properties error:", error);
     return res.status(500).json({
