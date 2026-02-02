@@ -14,6 +14,7 @@ import UnitRoute from './routes/UnitRoute/UnitRoute.js';
 import OfficeRoute from './routes/OfficeRoute/OfficeRoute.js';
 import AcquisitionRoute from './routes/AcquisitionType/AcquisitionType.js';
 import ItemsRoute from './routes/ItemsRoute/ItemsRoute.js';
+import PropertyRoute from './routes/PropertyRoute/PropertyRoute.js'
 
 import { connectDb } from './db/db.js';
 
@@ -51,6 +52,7 @@ app.use('/api/unit', UnitRoute);
 app.use('/api/office', OfficeRoute);
 app.use('/api/acquisitiontype', AcquisitionRoute);
 app.use('/api/items', ItemsRoute);
+app.use('/api/property', PropertyRoute)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
