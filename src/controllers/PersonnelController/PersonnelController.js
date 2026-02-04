@@ -197,3 +197,24 @@ export const deletePersonnel = async (req, res) => {
     });
   }
 };
+
+export const getPersonnelById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const personnel = await Personnel.findById(id).select("-password");
+
+    if (!personnel) {
+      return res.status(404).json({
+        message: "Personnel not found",
+      });
+    }
+
+    return res.status(200).json(personnel);
+  } catch (error) {
+    console.error("GET PERSONNEL BY ID ERROR:", error);
+    return res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};

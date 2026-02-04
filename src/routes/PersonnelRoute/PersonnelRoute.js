@@ -2,6 +2,7 @@ import express from "express";
 import {
   createPersonnel,
   getPersonnel,
+   getPersonnelById,
   updatePersonnel,
   deletePersonnel,
 } from "../../controllers/PersonnelController/PersonnelController.js";
@@ -46,6 +47,12 @@ router.delete(
   "/deletepersonnel/:id",
   authenticateToken,
   deletePersonnel
+);
+
+router.get(
+  "/getpersonnel/:id",
+  authenticateToken,
+  getPersonnelById
 );
 
 export default router;
