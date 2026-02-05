@@ -16,7 +16,7 @@ import AcquisitionRoute from './routes/AcquisitionType/AcquisitionType.js';
 import ItemsRoute from './routes/ItemsRoute/ItemsRoute.js';
 import PropertyRoute from './routes/PropertyRoute/PropertyRoute.js'
 import PersonnelPropertyRoutes from "./routes/PropertiesPersonnel/PropertiesPersonnel.js";
-
+import PropertyPerItem from "./routes/PropertyPerItem/PropertyPerItem.js"
 import { connectDb } from './db/db.js';
 
 const app = express();
@@ -55,6 +55,7 @@ app.use('/api/acquisitiontype', AcquisitionRoute);
 app.use('/api/items', ItemsRoute);
 app.use('/api/property', PropertyRoute)
 app.use('/api/personnelproperty', PersonnelPropertyRoutes)
+app.use('/api/propertyitem', PropertyPerItem)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
