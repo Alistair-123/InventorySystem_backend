@@ -43,6 +43,7 @@ export const getPersonnelPropertySummary = async (req, res) => {
 
         return {
           _id: personnel._id,
+          personnelImage: personnel.personnelImage,
           personnelId: personnel.personnelId,
           fullName: `${personnel.firstName} ${personnel.lastName}`,
           designationName: personnel.designationName,
