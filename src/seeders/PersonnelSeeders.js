@@ -1,29 +1,29 @@
+import Personnel from "../models/Personnel/Personnel.js";
 import bcrypt from "bcryptjs";
 
-const salt = await bcrypt.genSalt(10);
+export default async function seedPersonnel() {
+  await Personnel.deleteMany();
 
-export const personnelSeed = [
-  {
-    personnelId: "ADMIN-001",
-    firstName: "System",
-    middleName: "",
-    lastName: "Administrator",
-    personnelType: "plantilla",
-    designationName: "Information Technology Head",
-    status: "active",
-    password: await bcrypt.hash("Admin@123", salt),
-    role: "admin",
-  },
-  {
-    personnelId: "USER-001",
-    firstName: "Juan",
-    middleName: "S",
-    lastName: "Dela Cruz",
-    personnelType: "jobOrder",
-    designation: "Staff",
-    designationName: "Office Staff",
-    status: "active",
-    password: await bcrypt.hash("User@123", salt),
-    role: "user",
-  },
-];
+  const hashedPassword = await bcrypt.hash("password123", 10);
+
+  const personnels = [];
+
+  for (let i = 1; i <= 20; i++) {
+    personnels.push({
+      personnelId: `PER-${String(i).padStart(3, "0")}`,
+      firstName: `Employee${i}`,
+      middleName: "M",
+      lastName: `Lastname${i}`,
+      personnelType: i % 2 === 0 ? "plantilla" : "jobOrder",
+      designationName: i % 2 === 0 ? "Staff Officer" : "Clerk",
+      status: "active",
+      password: hashedPassword,
+      role: i === 1 ? "admin" : "user"
+    });
+  }
+
+  const inserted = await Personnel.insertMany(personnels);
+
+  console.log("✅ Personnel Seeded:", inserted.length);
+  return inserted;
+}

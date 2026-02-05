@@ -1,41 +1,40 @@
-/* eslint-disable no-undef */
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import Personnel from '../models/Personnel/Personnel.js';
-import { personnelSeed } from './PersonnelSeeders.js';
+
+import seedCategories from "./categorySeeder.js";
+import seedBrands from "./brandSeeder.js";
+import seedUnits from "./unitSeeder.js";
+import seedAcquisitionTypes from "./acquisitionSeeder.js";
+import seedOffices from "./officeSeeder.js";
+import seedPersonnel from "./PersonnelSeeders.js";
+import seedItems from "./itemsSeeder.js";
+import seedProperties from "./propertySeeder.js";
 
 dotenv.config();
 
-const connectDB = async () => {
-  await mongoose.connect(process.env.MONGO_URI);
-};
-
-const importData = async () => {
+async function runSeeder() {
   try {
-    await connectDB();
+    // eslint-disable-next-line no-undef
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("✅ MongoDB Connected");
 
-    await Personnel.deleteMany();
-    await Personnel.insertMany(personnelSeed);
+    console.log("🌱 Seeding Started...\n");
 
-    console.log("Personnel seeded successfully");
+    await seedCategories();
+    await seedBrands();
+    await seedUnits();
+    await seedAcquisitionTypes();
+    await seedOffices();
+    await seedPersonnel();
+    await seedItems();
+    await seedProperties();
+
+    console.log("\n✅ ALL DATA SEEDED SUCCESSFULLY!");
     process.exit();
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.error("❌ Seeder Error:", err);
     process.exit(1);
   }
-};
+}
 
-const destroyData = async () => {
-  try {
-    await connectDB();
-
-    await Personnel.deleteMany();
-    console.log("Personnel data destroyed");
-    process.exit();
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
-};
-
-process.argv[2] === "-d" ? destroyData() : importData();
+runSeeder();

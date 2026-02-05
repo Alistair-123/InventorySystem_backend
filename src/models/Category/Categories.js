@@ -10,7 +10,6 @@ const Counter =
   mongoose.models.Counter ||
   mongoose.model("Counter", CounterSchema);
 
-
 /* ---------- Category Schema ---------- */
 const CategorySchema = new mongoose.Schema({
   categoryId: {
