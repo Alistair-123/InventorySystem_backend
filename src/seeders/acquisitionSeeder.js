@@ -26,12 +26,16 @@ export default async function seedAcquisitionTypes() {
     "Misc Acquisition"
   ];
 
-  const acquisitions = await AcquisitionType.insertMany(
-    typesData.map((name) => ({
+  const acquisitions = [];
+
+  for (const name of typesData) {
+    const acquisition = await AcquisitionType.create({
       acquisitionTypeName: name,
       status: "active"
-    }))
-  );
+    });
+
+    acquisitions.push(acquisition);
+  }
 
   console.log("✅ Acquisition Types Seeded:", acquisitions.length);
   return acquisitions;

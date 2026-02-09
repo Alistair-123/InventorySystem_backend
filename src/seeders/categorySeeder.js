@@ -25,14 +25,17 @@ export default async function seedCategories() {
     "Agricultural Tools",
     "Miscellaneous Items"
   ];
+      const categories = await Category.insertMany(
+      categoriesData.map((name, index) => ({
+        categoryId: `CAT-${String(index + 1).padStart(3, "0")}`,
+        categoryName: name,
+        status: "active"
+      }))
+    );
 
-  const categories = await Category.insertMany(
-    categoriesData.map((name) => ({
-      categoryName: name,
-      status: "active"
-    }))
-  );
+ 
 
+  
   console.log("✅ Categories Seeded:", categories.length);
   return categories;
 }

@@ -26,12 +26,16 @@ export default async function seedBrands() {
     "IBM"
   ];
 
-  const brands = await Brand.insertMany(
-    brandsData.map((name) => ({
+  const brands = [];
+
+  for (const name of brandsData) {
+    const brand = await Brand.create({
       brandName: name,
       status: "active"
-    }))
-  );
+    });
+
+    brands.push(brand);
+  }
 
   console.log("✅ Brands Seeded:", brands.length);
   return brands;

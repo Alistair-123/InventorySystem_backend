@@ -26,12 +26,16 @@ export default async function seedOffices() {
     "Senior Citizen Office"
   ];
 
-  const offices = await Office.insertMany(
-    officesData.map((name) => ({
+  const offices = [];
+
+  for (const name of officesData) {
+    const office = await Office.create({
       officeName: name,
       status: "active"
-    }))
-  );
+    });
+
+    offices.push(office);
+  }
 
   console.log("✅ Offices Seeded:", offices.length);
   return offices;

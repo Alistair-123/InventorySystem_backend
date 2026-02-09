@@ -26,12 +26,16 @@ export default async function seedUnits() {
     "Container"
   ];
 
-  const units = await Unit.insertMany(
-    unitsData.map((name) => ({
+  const units = [];
+
+  for (const name of unitsData) {
+    const unit = await Unit.create({
       unitName: name,
       status: "active"
-    }))
-  );
+    });
+
+    units.push(unit);
+  }
 
   console.log("✅ Units Seeded:", units.length);
   return units;

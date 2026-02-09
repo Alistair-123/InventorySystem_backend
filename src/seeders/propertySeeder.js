@@ -12,6 +12,13 @@ export default async function seedProperties() {
   const personnels = await Personnel.find();
   const offices = await Office.find();
 
+  // ✅ Safety Check
+  if (!items.length || !acquisitions.length || !personnels.length || !offices.length) {
+    throw new Error(
+      "❌ Seed Items, AcquisitionTypes, Personnel, and Offices before Properties."
+    );
+  }
+
   const properties = [];
 
   for (let i = 1; i <= 20; i++) {
