@@ -18,6 +18,8 @@ import PropertyRoute from './routes/PropertyRoute/PropertyRoute.js'
 import PersonnelPropertyRoutes from "./routes/PropertiesPersonnel/PropertiesPersonnel.js";
 import PropertyPerItem from "./routes/PropertyPerItem/PropertyPerItem.js"
 import PropertiesPerCategory from "./routes/PropertiesPerCategories/PropertiesPerCatgory.js"
+import PropertyStatus from "./routes/PropertyStatus/PropertyStatus.js"
+import Profile from "./routes/ProfileRoute/ProfileRoute.js"
 import { connectDb } from './db/db.js';
 
 const app = express();
@@ -58,7 +60,8 @@ app.use('/api/property', PropertyRoute)
 app.use('/api/personnelproperty', PersonnelPropertyRoutes)
 app.use('/api/propertyitem', PropertyPerItem)
 app.use('/api/propertycatgory', PropertiesPerCategory)
-
+app.use('/api/propertystatus', PropertyStatus)
+app.use('/api/profileroute', Profile)
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
