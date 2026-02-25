@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import bcrypt from "bcryptjs";
 const personnelSchema = new mongoose.Schema({
       personnelImage: {
         type: String, // relative path or filename
@@ -52,6 +52,17 @@ const personnelSchema = new mongoose.Schema({
     
     createdAt: { type: Date, default: Date.now },
 }, { timestamps: true })
+
+// ✅ Auto-hash password on save
+personnelSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+// ✅ comparePassword method
+personnelSchema.methods.comparePassword = async function (candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
+};
 
 const Personnel = mongoose.model("Personnel", personnelSchema);
 export default Personnel;

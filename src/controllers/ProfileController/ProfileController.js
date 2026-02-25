@@ -54,6 +54,9 @@ export const updateMyPassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
 
+    console.log("🔑 Password update request for:", req.personnel?.id);
+    console.log("🔑 Body received:", req.body);  // check field names arriving
+
     const personnel = await Personnel.findById(req.personnel.id);
 
     if (!personnel) {
@@ -61,6 +64,7 @@ export const updateMyPassword = async (req, res) => {
     }
 
     const isMatch = await personnel.comparePassword(oldPassword);
+    console.log("🔑 Password match result:", isMatch);
 
     if (!isMatch) {
       return res.status(400).json({ message: "Old password incorrect." });
@@ -71,7 +75,8 @@ export const updateMyPassword = async (req, res) => {
 
     res.json({ message: "Password updated successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Password update failed." });
+    console.error("❌ Password update error:", error); // 👈 this will show the real error
+    res.status(500).json({ message: "Password update failed.", error: error.message });
   }
 };
 
