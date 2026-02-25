@@ -151,9 +151,22 @@ export const updatePersonnel = async (req, res) => {
 
     // Handle image replacement
     if (req.file) {
-      deleteFileIfExists(existingPersonnel.personnelImage);
-      updateData.personnelImage = `/uploads/personnels/${req.file.filename}`;
-    }
+  const newImagePath = `/uploads/personnels/${req.file.filename}`;
+  updateData.personnelImage = newImagePath;
+
+  // Update first
+  const updatedPersonnel = await Personnel.findByIdAndUpdate(
+    id,
+    updateData,
+    { new: true, runValidators: true }
+  );
+
+  // Delete AFTER successful update
+  if (existingPersonnel.personnelImage) {
+    deleteFileIfExists(existingPersonnel.personnelImage);
+  }
+  return res.status(200).json(updatedPersonnel);
+}
 
     const updatedPersonnel = await Personnel.findByIdAndUpdate(
       id,

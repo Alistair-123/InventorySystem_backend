@@ -86,7 +86,7 @@ export const updateProfileImage = async (req, res) => {
 
     const updated = await Personnel.findByIdAndUpdate(
       req.personnel.id,
-      { personnelImage: req.file.filename },
+      { personnelImage: `/uploads/personnels/${req.file.filename}` },
       { new: true }
     ).select("-password -refreshToken");
 
