@@ -3,6 +3,7 @@ import Category from "../../models/Category/Categories.js";
 import Brand from "../../models/Brand/Brand.js";
 import Unit from "../../models/Unit/Unit.js";
 import Items from "../../models/Item/Items.js";
+import Property from "../../models/Property/Property.js";
 import fs from "fs";
 import path from "path";
 
@@ -145,6 +146,16 @@ export const deleteItem = async (req, res) => {
       return res.status(404).json({ message: "Item not found" });
     }
 
+    // CHECK IF USED IN PROPERTIES
+    const propertyExists = await Property.exists({ item: item._id });
+
+    if (propertyExists) {
+      return res.status(400).json({
+        message: "Cannot delete item because it is used in properties"
+      });
+    }
+
+    // DELETE IMAGE
     if (item.itemImage) {
       const imagePath = path.join(
         process.cwd(),
@@ -160,7 +171,9 @@ export const deleteItem = async (req, res) => {
     }
 
     await item.deleteOne();
+
     res.json({ message: "Item deleted successfully" });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

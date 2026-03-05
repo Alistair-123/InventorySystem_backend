@@ -33,7 +33,7 @@ export const getProperties = async (req, res) => {
 
     // Fetch properties with pagination
     const properties = await Property.find(query)
-      .populate("item", "name") // show item name only
+      .populate("item", "itemName") // show item name only
       .populate("acquisitionType", "type")
       .populate("personnel", "name")
       .populate("office", "name")
