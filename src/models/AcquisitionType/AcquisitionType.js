@@ -21,6 +21,7 @@ const AcquisitionTypeSchema = new mongoose.Schema({
   acquisitionTypeName: {
     type: String,
     required: true,
+     unique: true,
     trim: true
   },
   status: {

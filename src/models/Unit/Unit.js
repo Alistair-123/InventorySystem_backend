@@ -20,6 +20,7 @@ const UnitSchema = new mongoose.Schema({
   },
   unitName: {
     type: String,
+     unique: true,
     required: true,
     trim: true
   },

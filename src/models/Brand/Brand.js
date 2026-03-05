@@ -21,7 +21,8 @@ const BrandSchema = new mongoose.Schema({
   brandName: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
+     unique: true,
   },
   status: {
     type: String,

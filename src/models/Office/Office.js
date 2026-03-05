@@ -21,6 +21,7 @@ const OfficeSchema = new mongoose.Schema({
   officeName: {
     type: String,
     required: true,
+     unique: true,
     trim: true
   },
   status: {
