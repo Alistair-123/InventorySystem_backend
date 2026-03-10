@@ -1,5 +1,5 @@
-import Property from "../../models/Property/Property";
-import calculateDepreciation from "../../utils/calculateDepreciation";
+import Property from "../../models/Property/Property.js";
+import calculateDepreciation from "../../utils/calculateDepreciation.js";
 
 export const getPropertiesWithDepreciation = async (req, res) => {
   try {
@@ -12,7 +12,7 @@ export const getPropertiesWithDepreciation = async (req, res) => {
 
     /* Fetch properties */
     const properties = await Property.find()
-      .populate("item", "name")
+      .populate("item", "itemName")
       .populate("acquisitionType", "name")
       .skip(skip)
       .limit(limit)
@@ -51,7 +51,7 @@ export const getPropertiesWithDepreciation = async (req, res) => {
 
       return {
         propertyNo: prop.propertyNo,
-        itemName: prop.item?.name || null,
+        itemName: prop.item?.itemName || null,
         acquisitionDate: prop.acquisitionDate,
         acquisitionName: prop.acquisitionType?.name || null,
         acquisitionValue,
