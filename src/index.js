@@ -21,6 +21,7 @@ import PropertiesPerCategory from "./routes/PropertiesPerCategories/PropertiesPe
 import PropertyStatus from "./routes/PropertyStatus/PropertyStatus.js"
 import Profile from "./routes/ProfileRoute/ProfileRoute.js"
 import DashboardRute from "./routes/DashboardRoute/DashboardRoute.js"
+import InventorySummaryRoute from "./routes/InventorySummaryRoute/InventorySummaryRoute.js"
 import { connectDb } from './db/db.js';
 
 const app = express();
@@ -64,6 +65,8 @@ app.use('/api/propertycatgory', PropertiesPerCategory)
 app.use('/api/propertystatus', PropertyStatus)
 app.use('/api/profileroute', Profile)
 app.use('/api/dashoardroute', DashboardRute)
+app.use('/api/inventorysummary', InventorySummaryRoute)
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
