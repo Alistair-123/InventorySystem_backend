@@ -29,8 +29,6 @@ export const createPersonnel = async (req, res) => {
     // Normalize once
     personnelId = personnelId.trim().toUpperCase();
 
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-
     const newPersonnel = new Personnel({
       personnelId,
       firstName,
@@ -39,7 +37,7 @@ export const createPersonnel = async (req, res) => {
       personnelType,
       designationName,
       status,
-      password: hashedPassword,
+      password,
       role: role || "user",
       personnelImage: req.file
         ? `/uploads/personnels/${req.file.filename}`

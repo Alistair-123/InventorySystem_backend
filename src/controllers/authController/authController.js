@@ -27,7 +27,7 @@ export const login = async (req, res) => {
     }
 
     // Trim to avoid whitespace issues
-    const trimmedId = personnelId.trim();
+    const trimmedId = personnelId.trim().toUpperCase();
 
     // 2. Find personnel (include password field)
     const personnel = await Personnel.findOne({ personnelId: trimmedId }).select('+password');
@@ -39,7 +39,7 @@ export const login = async (req, res) => {
     }
 
     // 3. Verify password
-    const isPasswordValid = await bcrypt.compare(password, personnel.password);
+    const isPasswordValid = await personnel.comparePassword(password);
     
     if (!isPasswordValid) {
       return res.status(401).json({
